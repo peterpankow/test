@@ -1,11 +1,11 @@
-TARGET = firmware
-SDK_PATH = ./sdk
-CC = arm-none-eabi-gcc
-CFLAGS = -I$(SDK_PATH)/devices -I$(SDK_PATH)/boards -O2 -mcpu=cortex-m33 -mthumb
+CC=arm-none-eabi-gcc
+OBJCOPY=arm-none-eabi-objcopy
+
+CFLAGS=-mcpu=cortex-m33 -mthumb -O2 -nostdlib -ffreestanding
 
 all:
-    $(CC) main.c -T link.ld $(CFLAGS) -o $(TARGET).elf
-    arm-none-eabi-objcopy -O binary $(TARGET).elf $(TARGET).bin
+    $(CC) main.c -T link.ld $(CFLAGS) -o firmware.elf
+    $(OBJCOPY) -O binary firmware.elf firmware.bin
 
 clean:
     rm -f *.elf *.bin
