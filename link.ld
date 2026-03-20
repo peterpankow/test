@@ -1,16 +1,20 @@
+ENTRY(main)
+
 SECTIONS
 {
-    . = 0x00000000;
+  . = 0x00000000;
 
-    .text : {
-        *(.text*)
-    }
+  .text : {
+    *(.text*)
+    *(.rodata*)
+  }
 
-    .data : {
-        *(.data*)
-    }
+  .data : {
+    *(.data*)
+  }
 
-    .bss : {
-        *(.bss*)
-    }
+  .bss : {
+    *(.bss*)
+    *(COMMON)
+  }
 }
