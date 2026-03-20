@@ -1,9 +1,9 @@
 name: Build Firmware
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -11,19 +11,19 @@ jobs:
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install ARM GCC
       run: |
         sudo apt update
         sudo apt install -y gcc-arm-none-eabi binutils-arm-none-eabi
 
-    - name: Build
+    - name: Build firmware
       run: |
         make
 
-    - name: Upload firmware
-      uses: actions/upload-artifact@v3
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
       with:
         name: firmware
         path: firmware.bin
