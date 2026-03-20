@@ -1,34 +1,26 @@
-#include "fsl_gpio.h"
-#include "fsl_clock.h"
-#include "fsl_iocon.h"
-#include "fsl_common.h"
-#include "board.h"
+#include <stdint.h>
 
-#include "pin_mux.h"
+#define GPIO0_BASE 0x40001000UL
+#define GPIO_PORT0_DIR (*(volatile uint32_t*)(GPIO0_BASE + 0x2000))
+#define GPIO_PORT0_PIN (*(volatile uint32_t*)(GPIO0_BASE + 0x3000))
 
-#define LED_GPIO GPIO0
-#define LED_PIN  5U  // Beispiel: P0_5 – bitte anpassen je nach LED-Pin des Boards
+#define LED_PIN (5U)  // Beispiel: P0_5 → ggf. anpassen für deine LED
 
-void delay(void)
+static void delay(void)
 {
-    for (volatile uint32_t i = 0; i < 3000000; i++) {
-        __NOP();
+    for (volatile uint32_t i = 0; i < 500000; i++) {
+        __asm__("nop");
     }
 }
 
 int main(void)
 {
-    CLOCK_EnableClock(kCLOCK_Gpio0);
-
-    gpio_pin_config_t led_config = {
-        kGPIO_DigitalOutput,
-        0,
-    };
-
-    GPIO_PinInit(LED_GPIO, LED_PIN, &led_config);
+    // GPIO 0: Pin als Ausgang konfigurieren
+    GPIO_PORT0_DIR |= (1U << LED_PIN);
 
     while (1) {
-        GPIO_PortToggle(LED_GPIO, 1u << LED_PIN);
+        // Toggle LED
+        GPIO_PORT0_PIN ^= (1U << LED_PIN);
         delay();
     }
 }
